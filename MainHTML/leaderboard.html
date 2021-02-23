@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="utf-8"/>
+        <link rel="stylesheet" href="../TemplateData/styles_leaderboard.css"/>
+</head>
+<body>
+     <img class="img" src="../Images/refresh1.png" onclick="location.reload()">
+</img>
+        <div class = "leaderboard" style="overflow-y:auto;" >
+            <table style="width:100%" id="table">
+                <tr>
+                  <th>Rank</th> 
+                  <th>Username</th>  
+                  <th>Team</th>
+                  <th>Team Points</th>
+                  <th>Colour</th>
+                </tr>
+              </table> 
+        </div>
+        <script type= "text/javascript">
+        document.addEventListener("DOMContentLoaded", Onclick()); 
+        function Onclick() //AJAX Request function
+        {
+            var Team = [], Username = [], Marks = [], Colour = [] ;
+            var request = new XMLHttpRequest();
+            request.open('GET', 'http://trivialinspace.ddns.net:12375/leadstat', true);
+            request.onload = function () {
+            var data = JSON.parse(this.response)
+
+            if (request.status == 200) {
+                data.forEach((lead) => {
+                Team.push(lead.Team);
+                Username.push(lead.Username);
+                Marks.push(lead.Score);
+                Colour.push(lead.Colour);
+                })
+                  } else {
+                     window.alert('error')
+                  }
+                  var k =1;
+                  var points = 1;
+                  for(var i =0; i<Team.length; i++)
+                {
+                  addRow("table",Username[i],Team[i],Marks[i],Colour[i],points);
+                  if(Marks[k-1]/Marks[k] > 1)
+                  {
+                    points = points + 1;
+                  }
+                  k++;
+                }
+               // document.getElementById('user 1').innerHTML = Username[0];
+               // document.getElementById('team 1').innerHTML = Team[0];
+               // document.getElementById('points 1').innerHTML = Marks[0];
+                } 
+            request.send();
+        }
+        </script>
+        <script type= "text/javascript">
+        function addRow(tableID,Username,Team,Marks,Colour,Points) {
+
+              var table = document.getElementById(tableID);
+
+              var rowCount = table.rows.length;
+              var row = table.insertRow(rowCount);
+
+
+              var element0 = document.createElement("td");
+              element0.type = "text";
+              element0.name="text[]";
+              element0.innerHTML = "<span style='color:" + Colour + ";'>"+ Points +"</span>";
+              //cell1.Marks;
+              switch(Points){
+                case 1: Points = "<img src =\"../Images/first_place.png\" width=\"40px\" height=\"40px\">"; element0.innerHTML = Points; break;
+                case 2: Points = "<img src =\"../Images/second_place.png\" width=\"40px\" height=\"40px\">"; element0.innerHTML = Points; break;
+                case 3: Points = "<img src =\"../Images/third_place.png\" width=\"40px\" height=\"40px\">"; element0.innerHTML = Points; break;
+                default: element0.innerHTML = "<span style='color:" + Colour + ";'>"+ Points +"</span>"; break;
+              }
+              row.append(element0);
+             
+             
+              var element1 = document.createElement("td");
+              element1.type = "text";
+              element1.name="text[]";
+              element1.innerHTML = "<span style='color:" + Colour + ";'>"+ Username +"</span>";
+              row.append(element1);
+
+              
+              var element2 = document.createElement("td");
+              element2.type = "text";
+              element2.name="text2";
+              element2.innerHTML = "<span style='color:" + Colour + ";'>"+ Team +"</span>";
+              row.appendChild(element2);
+             
+              var element3 = document.createElement("td");
+              element3.type = "text";
+              element3.name = "text3";
+              element3.innerHTML = "<span style='color:" + Colour + ";'>"+ Marks +"</span>";
+              row.appendChild(element3);
+
+              var element4 = document.createElement("td");
+              element4.type = "img";
+              element4.name = "img1";
+              console.log(Colour);
+              switch(Colour){
+                case "Blue": Colour = "<img src =\"../Images/blue.png\" width=\"20px\" height=\"20px\">"; break;
+                case "Green": Colour = "<img src =\"../Images/green.png\" width=\"20px\" height=\"20px\">"; break;
+                case "Orange": Colour = "<img src =\"../Images/orange.png\" width=\"20px\" height=\"20px\">"; break;
+                case "Pink": Colour = "<img src =\"../Images/pink.png\" width=\"20px\" height=\"20px\">"; break;
+                case "Purple": Colour = "<img src =\"../Images/purple.png\" width=\"20px\" height=\"20px\">"; break;
+                case "Yellow": Colour = "<img src =\"../Images/yellow.png\" width=\"20px\" height=\"20px\">"; break;
+              }
+              element4.innerHTML = Colour;
+              row.appendChild(element4);
+
+          }
+        </script>
+        
+</body>
+</html>

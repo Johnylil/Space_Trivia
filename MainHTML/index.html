@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Page Title </title>
+        <link rel="stylesheet" href="../TemplateData/styles.css"/>
+        <link rel="shortcut icon" href="../TemplateData/favicon.ico">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div id="Sidenavigation" class="sidenav">
+        <!-- This code is for the X button on the side navigation-->
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <img id = "image"></a>
+        <div class="username" id = "myprofile"></div>
+        <a href="profile.html" id = "Sign">Sign In</a>
+        <a href="my_profile.html" id = "my_profile">My Profile</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <a href="aboutus.html">About</a>
+      </div>
+      <!--This is our button-->
+      <span onclick="openNav()">
+        <img src="../Images/navbutton.jpg" width="35" height="35" class="NavButton">
+      </span>
+      <!-- Inside here is our whole code-->
+      <div id="main">
+        <!-- Code for embedding unity project to the website-->
+         <div id="unity-container" class="unity-desktop">
+      <canvas id="unity-canvas"></canvas>
+      <div id="unity-loading-bar">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div>
+      <div id="unity-mobile-warning">
+        WebGL builds are not supported on mobile devices.
+      </div>
+      <div id="unity-footer">
+        <div id="unity-webgl-logo"></div>
+        <div id="unity-fullscreen-button"></div>
+        <div id="unity-build-title">Trivial_In_Space</div>
+      </div>
+    </div>
+    <script>
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/Desktop.loader.js";
+      var config = {
+        dataUrl: buildUrl + "/Desktop.data.unityweb",
+        frameworkUrl: buildUrl + "/Desktop.framework.js.unityweb",
+        codeUrl: buildUrl + "/Desktop.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "Trivial_In_Space",
+        productVersion: "1.0",
+      };
+
+      var container = document.querySelector("#unity-container");
+      var canvas = document.querySelector("#unity-canvas");
+      var loadingBar = document.querySelector("#unity-loading-bar");
+      var progressBarFull = document.querySelector("#unity-progress-bar-full");
+      var mobileWarning = document.querySelector("#unity-mobile-warning");
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        container.className = "unity-mobile";
+        config.devicePixelRatio = 1;
+        mobileWarning.style.display = "block";
+        setTimeout(() => {
+          mobileWarning.style.display = "none";
+        }, 5000);
+      } else {
+        canvas.style.width = "960px";
+        canvas.style.height = "600px";
+      }
+      loadingBar.style.display = "block";
+
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          progressBarFull.style.width = 100 * progress + "%";
+        }).then((unityInstance) => {
+          loadingBar.style.display = "none";
+          container.ondblclick = () => {
+            unityInstance.SetFullscreen(1);
+          };
+        }).catch((message) => {
+          alert(message);
+        });
+      };
+      document.body.appendChild(script);
+    </script>
+
+        
+        
+        <script>
+            /* Set the width of the side navigation to 250px and the left margin of the page content to 250px and add a black background color to body */
+            function openNav() {
+            document.getElementById("Sidenavigation").style.width = "250px";
+            document.getElementById("main").style.marginLeft = "250px";
+            document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+            }
+
+            /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
+            function closeNav() {
+            document.getElementById("Sidenavigation").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+            document.body.style.backgroundColor = "white"; 
+            }
+        </script>
+        <script type="text/javascript">
+        if(sessionStorage.getItem("islogged") == null)
+        {
+          document.getElementById("image").style.display = "none";
+          document.getElementById("myprofile").style.display = "none";
+          document.getElementById("my_profile").style.display = "none";
+          document.getElementById("Sign").style.display = "block";
+        }else{
+          document.getElementById("Sign").style.display = "none";
+          document.getElementById("myprofile").style.display = "block";
+          document.getElementById("myprofile").innerHTML = sessionStorage.getItem("Username");
+          document.getElementById("my_profile").style.display = "block";
+          document.getElementById("image").style.display = "block";
+        }
+        var choose = Math.floor(Math.random() * 5);
+        sessionStorage.setItem("choose",choose);
+        switch(choose){
+          case 0:  {document.getElementById("image").src = "../Images/spaceman.jpg"; sessionStorage.setItem("choose","../Images/spaceman.jpg");} break;
+          case 1:  document.getElementById("image").src = "../Images/astronaut1.jpg"; sessionStorage.setItem("choose","../Images/astronaut1.jpg"); break;
+          case 2:  document.getElementById("image").src = "../Images/astronaut2.jpg"; sessionStorage.setItem("choose","../Images/astronaut2.jpg"); break;
+          case 3:  document.getElementById("image").src = "../Images/robot.jpg"; sessionStorage.setItem("choose","../Images/robot.jpg"); break;
+          case 4:  document.getElementById("image").src = "../Images/rocket1.jpg"; sessionStorage.setItem("choose","../Images/rocket1.jpg"); break;
+        }
+        </script>
+      </div>
+ </body>
+</html>

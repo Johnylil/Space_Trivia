@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Profile</title>
+        <link rel="stylesheet" href="../TemplateData/profile_styles.css"/>
+</head>
+<body onload="retrieve();">
+<div class="user">
+    <header class="user__header">
+        <img src="../Images/rocket.png" alt="" />
+        <h1 class="user__title">Sign In Buddy!</h1>
+    </header>
+    
+    <form class="form">
+        <div class="form__group">
+            <input type="text" id = "username" placeholder="Username" class="form__input" />
+        </div>
+        
+        <button class="btn" type="button">Register</button>
+    </form>
+</div>
+<div id="snackbar">Username is empty!!</div>
+<script type= "text/javascript">
+const button = document.querySelector('.btn');
+const form   = document.querySelector('.form');
+var AlertMessage = document.getElementById("snackbar");
+button.addEventListener('click', function() {
+  // form.classList.add('form--no') 
+  var Name = document.getElementById("username").value;
+   if(Name == "")
+   {
+   AlertMessage.className = "show";
+   AlertMessage.innerHTML = "Username is empty!!";
+   setTimeout(function(){ AlertMessage.className = AlertMessage.className.replace("show", ""); }, 3000);
+   }else{
+    console.log(Name);
+    findin(Name);
+   }
+});
+</script>
+<script type= "text/javascript">
+var Team = [];
+ function retrieve(){
+            var request = new XMLHttpRequest();
+            request.open('GET', 'http://trivialinspace.ddns.net:12375/players', true);
+            request.onload = function () {
+            var data = JSON.parse(this.response)
+
+            if (request.status == 200) {
+                data.forEach((lead) => {
+                Team.push(lead.Username);
+                })
+                  } else {
+                     window.alert('error');
+                  }
+                  console.log(Team);
+    };
+    request.send();
+};
+function findin(data)
+{
+    if(Team.indexOf(data) != -1)
+    {
+        var AlertMessage = document.getElementById("snackbar");
+        AlertMessage.innerHTML = "Username already exists!!";
+        AlertMessage.className = "show";
+        setTimeout(function(){ AlertMessage.className = AlertMessage.className.replace("show", ""); }, 3000);
+    }else{
+        sessionStorage.setItem("Username", data);
+        location.href = "choose_teams.html";
+    }
+}
+</script>
+</body>
+</html>

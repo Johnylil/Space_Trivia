@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Profile</title>
+        <link rel="stylesheet" href="../TemplateData/create_styles.css"/>
+</head>
+<body onload="retrieve();">
+<div class="user">
+    <header class="user__header">
+        <img src="../Images/astronaut.png" alt="" />
+        <h1 class="user__title"> Create your Team, Mate!</h1>
+    </header>
+    
+    <form class="form">
+        <div class="form__group">
+            <input type="text" id = "team_name" placeholder="Team Name" class="form__input" />
+        </div>
+        <h1 style="color: white; margin: 0px 85px;">Select Colour</h1>
+            <label style="margin: 10px 0px;">
+                <input type="radio" name="colour" value="Blue">
+                <img src="../Images/blue.png">
+              </label>
+
+              <label style="margin: 10px 5px;">
+                <input type="radio" name="colour" value="Pink">
+                <img src="../Images/pink.png">
+              </label>
+
+              <label style="margin: 10px 3px;">
+                <input type="radio" name="colour" value="Yellow">
+                <img src="../Images/yellow.png">
+              </label>
+
+              <label style="margin: 10px 3px;">
+                <input type="radio" name="colour" value="Purple">
+                <img src="../Images/purple.png">
+              </label>
+
+              <label style="margin: 10px 5px;">
+                <input type="radio" name="colour" value="Green">
+                <img src="../Images/green.png">
+              </label>
+
+              <label style="margin: 10px 0px;">
+                <input type="radio" name="colour" value="Orange">
+                <img src="../Images/orange.png">
+              </label>
+
+        <button class="btn" type="button">Create Team!</button>
+    </form>
+</div>
+<div id="snackbar"></div>
+<script type= "text/javascript">
+    var Name = sessionStorage.getItem("Username");
+    sessionStorage.setItem("islogged","true");
+    const button = document.querySelector('.btn');
+    var Team = [];
+    var AlertMessage = document.getElementById("snackbar");
+    button.addEventListener('click', function() {
+    var team_name = document.getElementById("team_name").value;
+    if(document.querySelector('input[name="colour"]:checked').value == null)
+    {
+    AlertMessage.innerHTML = "Colour is empty!!";
+   AlertMessage.className = "show";
+   setTimeout(function(){ AlertMessage.className = AlertMessage.className.replace("show", ""); }, 3000);
+    }
+    var colour = document.querySelector('input[name="colour"]:checked').value;
+   if(team_name == "")
+   {
+   var AlertMessage = document.getElementById("snackbar");  
+   AlertMessage.className = "show";
+   AlertMessage.innerHTML = "Team Name is empty!!";
+   setTimeout(function(){ AlertMessage.className = AlertMessage.className.replace("show", ""); }, 3000);
+   }else{
+    if(Team.indexOf(team_name) != -1)
+    {
+        var AlertMessage = document.getElementById("snackbar");
+        AlertMessage.innerHTML = "Team Name already exists!!";
+        AlertMessage.className = "show";
+        setTimeout(function(){ AlertMessage.className = AlertMessage.className.replace("show", ""); }, 3000);
+    }else{
+
+var request = new XMLHttpRequest();
+    request.open('POST', 'http://trivialinspace.ddns.net:12375/teams/add', true);
+    request.setRequestHeader("Content-Type", "application/json");
+    request.setRequestHeader("Access-Control-Allow-Origin", "*");
+    var response;
+    request.onreadystatechange = function() {
+   if (this.readyState == 4 && this.status == 200) {
+     // Response
+     response = this.responseText;
+     console.log(response);
+   }
+};
+console.log(team_name);
+console.log(colour);
+var data = {"Name": team_name,"Colour": colour,"Marks": "0","Shape": "Circular"};
+request.send(JSON.stringify(data));
+if(response != "")
+{
+  sessionStorage.setItem("Team_Name",team_name);
+  window.setTimeout(function(){sendname(Name,team_name);},500);
+  
+}else{
+  console.log(request.status);
+  console.log(request.response);
+}
+    }
+  }
+   });
+</script>
+<script type="text/javascript">
+function retrieve(){
+  var request = new XMLHttpRequest();
+    request.open('GET', 'http://trivialinspace.ddns.net:12375/teams', true);
+            request.onload = function () {
+            var data = JSON.parse(this.response)
+
+            if (request.status == 200) {
+                data.forEach((lead) => {
+                Team.push(lead.Name);
+                })
+                  } else {
+                     window.alert('error');
+                  }
+                  console.log(Team);
+    };
+    request.send();
+  }
+  function sendname(name,teamname){
+    console.log("Inside");
+    var request = new XMLHttpRequest();
+    request.open('POST', 'http://trivialinspace.ddns.net:12375/players/add', true);
+    request.setRequestHeader("Content-Type", "application/json");
+    request.setRequestHeader("Access-Control-Allow-Origin", "*");
+    var response;
+    request.onreadystatechange = function() {
+   if (this.readyState == 4 && this.status == 200) {
+     // Response
+     response = this.responseText;
+     console.log("response 1:" + response);
+   }
+};
+var data = {"username": name,"team_name": teamname};
+console.log(name + "  " + teamname);
+request.send(JSON.stringify(data));
+if(response != "")
+{
+  console.log("request 2:" + request.responseText); 
+  window.setTimeout(function(){location.href = "index.html";},500);
+}else{
+  console.log(request.status);
+  console.log(request.response); 
+}
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Choose_Team</title>
+        <link rel="stylesheet" href="../TemplateData/choose_teams_styles.css"/>
+</head>
+<body>
+    <div class="row">
+        <div class="column">
+            <div class = "container" id = 'create'>
+          <img src="../Images/create.png" alt="Create Team" style="width:100%" class="image">
+        <!--<div class="overlay">-->  
+          <!--<div class="text">Create Team</div>-->  
+         <!--</div>--> 
+        </div>
+    </div>
+        <div class="column">
+            <div class = "container" id = 'join'>
+          <img src="../Images/join.png" alt="Join Team" style="width:100%" class="image" id = 'join'>
+          <!--<div class="overlay">-->  
+          <!--<div class="text">Join Team</div>-->  
+         <!--</div>--> 
+            </div>
+        </div>
+      </div> 
+    </div>
+    <script type="text/javascript">
+    var Name = sessionStorage.getItem("Username"); 
+    document.getElementById("create").onclick = function () {
+        location.href = "create_team.html";
+    };
+    document.getElementById("join").onclick = function () {
+        location.href = "select_team.html";
+    };
+    </script>
+    
+</body>
+</html>

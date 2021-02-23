@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="utf-8"/>
+        <link rel="stylesheet" href="../TemplateData/styles_select.css"/>
+</head>
+<body>
+     <img class="img" src="../Images/refresh1.png" onclick="location.reload()">
+</img>
+        <div class = "leaderboard" style="overflow-y:auto;" >
+            <table style="width:100%" id="table">
+                <tr>
+                  <th>Team</th>
+                  <th>Team Points</th>
+                  <th>Colour</th>
+                </tr>
+              </table> 
+        </div>
+        <script type= "text/javascript">
+        var Team = [], Username = [], Marks = [], Colour = [] ;
+            document.addEventListener("DOMContentLoaded", Onclick()); 
+            function Onclick() //AJAX Request function
+            {
+                var request = new XMLHttpRequest();
+                request.open('GET', 'http://trivialinspace.ddns.net:12375/teams', true);
+                request.onload = function () {
+                var data = JSON.parse(this.response)
+    
+                if (request.status == 200) {
+                    data.forEach((lead) => {
+                    Team.push(lead.Name);
+                    Marks.push(lead.Marks);
+                    Colour.push(lead.Colour);
+                    })
+                      } else {
+                         window.alert('error')
+                      }
+                      var k =1;
+                      var points = 1;
+                      for(var i =0; i<Team.length; i++)
+                    {
+                      addRow("table",Team[i],Marks[i],Colour[i],points,i);
+                      if(Marks[k-1]/Marks[k] > 1)
+                      {
+                        points = points + 1;
+                      }
+                      k++;
+                    }
+                }
+                request.send();
+            }
+                function addRow(tableID,Team,Marks,Colour,Points,i) {
+        
+                      var table = document.getElementById(tableID);
+        
+                      var rowCount = table.rows.length;
+                      var row = table.insertRow(rowCount);
+                      row.id = "row" + i;
+                      row.onclick = function(){
+                          if (confirm("Are you sure?") == true) {
+                            postteam(Team);
+                        }
+                      };
+
+              var element1 = document.createElement("td");
+              element1.type = "text";
+              element1.name="text1";
+              element1.id = "teams";
+              element1.innerHTML = "<span style='color:" + Colour + ";'>"+ Team +"</span>";
+              row.append(element1);
+
+
+              var element3 = document.createElement("td");
+              element3.type = "text";
+              element3.name = "text3";
+              element3.innerHTML = "<span style='color:" + Colour + ";'>"+ Marks +"</span>";
+              row.appendChild(element3);
+
+              var element4 = document.createElement("td");
+              element4.type = "img";
+              element4.name = "img1";
+              switch(Colour){
+                case "Blue": Colour = "<img src =\"../Images/blue.png\" width=\"20px\" height=\"20px\">"; break;
+                case "Green": Colour = "<img src =\"../Images/green.png\" width=\"20px\" height=\"20px\">"; break;
+                case "Orange": Colour = "<img src =\"../Images/orange.png\" width=\"20px\" height=\"20px\">"; break;
+                case "Pink": Colour = "<img src =\"../Images/pink.png\" width=\"20px\" height=\"20px\">"; break;
+                case "Purple": Colour = "<img src =\"../Images/purple.png\" width=\"20px\" height=\"20px\">"; break;
+                case "Yellow": Colour = "<img src =\"../Images/yellow.png\" width=\"20px\" height=\"20px\">"; break;
+              }
+              element4.innerHTML = Colour;
+              row.appendChild(element4);
+            }
+        function postteam(team){
+            name = sessionStorage.getItem("Username");
+            var request = new XMLHttpRequest();
+    request.open('POST', 'http://trivialinspace.ddns.net:12375/players/add', true);
+    request.setRequestHeader("Content-Type", "application/json");
+    request.setRequestHeader("Access-Control-Allow-Origin", "*");
+    var response;
+    request.onreadystatechange = function() {
+   if (this.readyState == 4 && this.status == 200) {
+     // Response
+     response = this.responseText;
+     console.log("response 1:" + response);
+   }
+};
+var data = {"username": name,"team_name": team};
+console.log(name + "  " + team);
+request.send(JSON.stringify(data));
+if(response != "")
+{
+    sessionStorage.setItem("islogged","true");
+    sessionStorage.setItem("Team_Name",team);
+  window.setTimeout(function(){location.href = "index.html";},200);
+}else{
+  console.log(request.status);
+  console.log(request.response); 
+}
+  }
+        </script>
