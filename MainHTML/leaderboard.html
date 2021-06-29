@@ -24,7 +24,7 @@
         {
             var Team = [], Username = [], Marks = [], Colour = [] ;
             var request = new XMLHttpRequest();
-            request.open('GET', 'http://trivialinspace.ddns.net:12375/leadstat', true);
+            request.open('GET', 'Your path', true);
             request.onload = function () {
             var data = JSON.parse(this.response)
 
@@ -49,9 +49,7 @@
                   }
                   k++;
                 }
-               // document.getElementById('user 1').innerHTML = Username[0];
-               // document.getElementById('team 1').innerHTML = Team[0];
-               // document.getElementById('points 1').innerHTML = Marks[0];
+               
                 } 
             request.send();
         }
@@ -69,7 +67,6 @@
               element0.type = "text";
               element0.name="text[]";
               element0.innerHTML = "<span style='color:" + Colour + ";'>"+ Points +"</span>";
-              //cell1.Marks;
               switch(Points){
                 case 1: Points = "<img src =\"../Images/first_place.png\" width=\"40px\" height=\"40px\">"; element0.innerHTML = Points; break;
                 case 2: Points = "<img src =\"../Images/second_place.png\" width=\"40px\" height=\"40px\">"; element0.innerHTML = Points; break;
